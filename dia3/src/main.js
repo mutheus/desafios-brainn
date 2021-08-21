@@ -1,12 +1,16 @@
 import './form';
 
 const inputName = document.querySelector('[data-js="name"]');
+const dontChange = ['da', 'das', 'de', 'do', 'dos'];
 
 inputName.addEventListener('input', (e) => {
-  const capitalize = e.target.value.split(' ').map((word) => {
-    if (word.length <= 3) return word;
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }).join(' ');
+  const words = e.target.value.split(' ');
   
-  inputName.value = capitalize;
+  e.target.value = words.map((word) => {
+    return dontChange.includes(word.toLowerCase()) ? word.toLowerCase() : capitalize(word);
+  }).join(' ');
 });
+
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
