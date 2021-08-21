@@ -1,14 +1,15 @@
-class Person {
-  constructor(name, surname, age, hobbies) {
-    this.name = name;
-    this.surname = surname;
-    this.age = age;
-    this.hobbies = hobbies;
-  }
+const john = {
+  name: 'John', 
+  surname: 'Doe', 
+  age: 30, 
+  hobbies: ['Surf', 'Design'],
 }
 
-const john = new Person('John', 'Doe', 30, ['Surf', 'Design']);
-const jane = new Person('Jane', 'Doe', 30, ['MuayThai', 'Programming']);
+const jane = {
+  ...john, 
+  name: 'Jane', 
+  hobbies: [...john.hobbies, 'MuayThai', 'Programming'],
+};
 
 console.log('John:', john);
 console.log('Jane:', jane);
