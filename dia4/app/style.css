@@ -59,7 +59,7 @@ img {
 }
 
 input,
-button[type="submit"] {
+button {
   height: 46px;
   font-weight: 500;
   display: flex;
@@ -84,4 +84,13 @@ input[type="color"] {
   justify-content: center;
   align-items: center;
   height: 30vh;
+}
+
+.delete {
+  height: 20px;
+  padding: 0;
+  aspect-ratio: 1/1;
+  border: 2px solid #333;
+  font-size: 1.1rem;
+  font-weight: 500;
 }

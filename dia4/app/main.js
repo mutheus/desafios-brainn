@@ -1,102 +1,17 @@
+import { get, post, del } from './http';
+
+import './style.css';
+
+const url = 'http://localhost:3333/cars';
 const formElem = $('car-form');
 const tableBody = $('tbody');
 
-renderCars();
-
-async function getCars() {
-  try {
-    const data = await fetch('http://localhost:3333/cars');
-    return await data.json();
-  } catch(error) {
-    console.log(error)
-  }
+function $ (elem) {
+  return document.querySelector(`[data-js="${elem}"]`);
 }
 
-async function postCar(car) {
-  try {
-    const data = await fetch('http://localhost:3333/cars', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(car)
-    });
-    return await data.json();
-  } catch(error) {
-    console.log(error.message)
-  }
-}
-
-async function deleteCar(plate) {
-  try {
-    const data = await fetch('http://localhost:3333/cars', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(plate)
-    });
-    return await data.json();
-  } catch(error) {
-    console.log(error.message)
-  }
-}
-
-async function renderCars() {
-  const cars = await getCars();
-  tableBody.innerHTML = '';
-  
-  if (cars.length === 0) {
-    const tr = $$('tr');
-    const td = $$('td');
-    td.setAttribute('colspan', 5);
-    const div = $$('div');
-    div.textContent = 'Nenhum carro encontrado';
-    div.classList.add('empty-table');
-    td.appendChild(div);
-    tr.appendChild(td);
-    tableBody.appendChild(tr);
-    
-    return;
-  }
-  
-  cars.forEach((car) => {
-    const tr = $$('tr');
-    
-    if (car.image) {
-      const imgElem = createImage(car.image);
-      tr.appendChild(imgElem);
-    }
-    
-    if (car.brandModel) {
-      const brandModelElem = createText(car.brandModel);
-      tr.appendChild(brandModelElem);
-    }
-    
-    if (car.year) {
-      const yearElem = createText(car.year);
-      tr.appendChild(yearElem);
-    }
-    
-    if (car.plate) {
-      const plateElem = createText(car.plate);
-      tr.appendChild(plateElem);
-    }
-    
-    if (car.color) {
-      const colorElem = createColor(car.color);
-      tr.appendChild(colorElem);
-      const tdDel = $$('td');
-      const delElem = $$('button');
-      delElem.setAttribute('data-js', 'delete');
-      delElem.classList.add('delete');
-      delElem.textContent = '×';
-      tdDel.appendChild(delElem);
-      tr.appendChild(tdDel);
-    }
-    
-    tableBody.appendChild(tr);
-  });
+function $$ (elem) {
+  return document.createElement(`${elem}`);
 }
 
 const getElemForm = (event) => (elemName) => {
@@ -109,18 +24,11 @@ const elementTypes = {
   color: createColor
 }
 
-function $ (elem) {
-  return document.querySelector(`[data-js="${elem}"]`);
-}
-
-function $$ (elem) {
-  return document.createElement(`${elem}`);
-}
-
 function createImage(value) {
   const tdImage = $$('td');
   const imgElem = $$('img');
-  imgElem.src = value;
+  imgElem.src = value.src;
+  imgElem.alt = value.alt;
   tdImage.appendChild(imgElem);
   
   return tdImage;
@@ -138,16 +46,17 @@ function createText(value) {
 function createColor(value) {
   const tdColor = $$('td');
   const colorDiv = $$('div');
-  colorDiv.classList.add('container-color');
+  colorDiv.classList.add('container__item');
   colorDiv.style.backgroundColor = value;
   tdColor.appendChild(colorDiv);
   
   return tdColor;
 }
 
-formElem.addEventListener('submit', (e) => {
+formElem.addEventListener('submit', async (e) => {
   e.preventDefault();
   const getElem = getElemForm(e);
+  
   const data = {
     image: getElem('image').value,
     brandModel: getElem('brand-model').value,
@@ -156,9 +65,106 @@ formElem.addEventListener('submit', (e) => {
     color: getElem('color').value
   };
   
-  postCar(data);
-  renderCars();
+  const result = await post(url, data);
+  
+  if (result.error) {
+    console.log('failed to post', result.message);
+    return;
+  }
+  
+  const noContent = $('no-content');
+  
+  if (noContent) {
+    tableBody.removeChild(noContent);
+  }
+  
+  createTableRow(data);
   
   e.target.reset();
   image.focus();
 });
+
+function createTableRow(data) {
+  const elements = [
+    {type: 'image', value: { src: data.image, alt: data.brandModel }},
+    {type: 'text', value: data.brandModel},
+    {type: 'text', value: data.year},
+    {type: 'text', value: data.plate},
+    {type: 'color', value: data.color},
+  ];
+  
+  const tr = $$('tr');
+  tr.dataset.plate = data.plate;
+  
+  elements.forEach((elem) => {
+    const td = elementTypes[elem.type](elem.value);
+    tr.appendChild(td);
+  });
+  
+  const btnTd = $$('td');
+  const button = $$('button');
+  button.textContent = '×';
+  button.classList.add('delete');
+  button.dataset.plate = data.plate;
+  btnTd.appendChild(button);
+  
+  button.addEventListener('click', handleDelete);
+  
+  tr.appendChild(btnTd);
+  tableBody.appendChild(tr);
+}
+
+async function handleDelete(e) {
+  const btn = e.target;
+  const plate = btn.dataset.plate;
+  
+  const result = await del(url, { plate });
+  
+  if (result.error) {
+    console.log('failed to delete', result.message);
+    return;
+  }
+  
+  const tr = document.querySelector(`tr[data-plate="${plate}"]`);
+  tableBody.removeChild(tr);
+  button.removeEventListener('click', handleDelete);
+  
+  const allTrs = $('tr');
+  
+  if (!allTrs) {
+    createNoCarRow();
+  }
+}
+
+function createNoCarRow() {
+  const tr = $$('tr');
+  const td = $$('td');
+  const thsLength = document.querySelectorAll('table th').length;
+  td.setAttribute('colspan', thsLength);
+  const div = $$('div');
+  div.textContent = 'Nenhum carro encontrado';
+  div.classList.add('empty-table');
+  td.appendChild(div);
+  
+  tr.dataset.js = 'no-content';
+  tr.appendChild(td);
+  tableBody.appendChild(tr);
+}
+
+async function getCars() {
+  const result = await get(url);
+  
+  if (result.error) {
+    console.log('failed to get cars', result.message);
+    return;
+  }
+  
+  if (result.length === 0) {
+    createNoCarRow();
+    return;
+  }
+  
+  result.forEach(createTableRow);
+}
+
+getCars();
