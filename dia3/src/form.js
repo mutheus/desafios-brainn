@@ -31,7 +31,7 @@ colors.forEach((color) => {
 selectElem.addEventListener('change', (e) => {
   containerElem.innerHTML = '';
   
-  Array.from(e.target.selectedOptions).map((option) => {
+  Array.from(e.target.selectedOptions).forEach((option) => {
     const div = createDiv(option.value);
     containerElem.appendChild(div);
   });
