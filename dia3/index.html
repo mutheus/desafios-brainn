@@ -7,9 +7,31 @@
     <title>Dia 3</title>
   </head>
   <body>
-    <form>
-      <input data-js="name" placeholder="e.g. Rubens de Oliveira" type="text" name="name" />
-    </form>
+    <div data-js="app" class="app">
+      <form>
+        <label for="name">
+          Type a name:
+          <input data-js="name" placeholder="e.g: Rubens de Oliveira" type="text" name="name" id="name" />
+        </label>
+        
+        <br/>
+        
+        <hr/>
+        
+        <label for="colors-select">
+          Choose one or more colors:
+          <select data-js="select" multiple id="colors-select" name="colors">
+            <option value="#ffab91">#ffab91</option>
+            <option value="#ffcc80">#ffcc80</option>
+            <option value="#e8ed9b">#e8ed9b</option>
+            <option value="#82deeb">#82deeb</option>
+            <option value="#d094da">#d094da</option>
+          </select>
+        </label>
+      </form>
+      
+      <div class="container" data-js="container"></div>
+    </div>
     
     <script type="module" src="/src/main.js"></script>
   </body>

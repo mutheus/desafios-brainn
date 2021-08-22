@@ -1,8 +1,38 @@
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html {
+  font-size: 100%;
+  font-family: system-ui;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  color: #4F4F4F;
+}
+
+.app {
+  padding: 2em 1em;
+}
+
+form {
+  margin-bottom: 2em;
+}
+
+.container {
+  display: flex;
+  gap: 4px;
+}
+
+.container__item {
+  width: 100%;
+  padding: 2px;
+  border-radius: 9px;
+  max-width: 100px;
+  aspect-ratio: 1/1;
+  display: flex;
+  place-items: center;
+  place-content: center;
 }
