@@ -14,18 +14,36 @@ function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-const selectElem = document.querySelector('[data-js="select"]');
+const formElem = document.querySelector('[data-js="form"]');
+const selectElem = document.createElement('select');
 const containerElem = document.querySelector('[data-js="container"]');
+const colors = ['#ffab91', '#ffcc80', '#e8ed9b', '#82deeb', '#d094da'];
+
+selectElem.setAttribute('multiple', '');
+
+colors.forEach((color) => {
+  const optionElem = document.createElement('option');
+  optionElem.setAttribute('value', color);
+  optionElem.textContent = color;
+  selectElem.appendChild(optionElem);
+});
 
 selectElem.addEventListener('change', (e) => {
-  const selectedOptions = Array.from(e.target.selectedOptions);
+  containerElem.innerHTML = '';
   
-  const elements = selectedOptions.map((item) => {
-    return `
-      <div class="container__item" style="background-color: ${item.value}">
-        ${item.value}
-      </div>
-    `;
-  }).join('');
-  containerElem.innerHTML = elements;
+  Array.from(e.target.selectedOptions).map((option) => {
+    const div = createDiv(option.value);
+    containerElem.appendChild(div);
+  });
 });
+
+function createDiv(value) {
+  const divElem = document.createElement('div');
+  divElem.classList.add('container__item');
+  divElem.style.backgroundColor = value;
+  divElem.textContent = value;
+  
+  return divElem;
+}
+
+formElem.appendChild(selectElem);
