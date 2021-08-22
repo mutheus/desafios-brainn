@@ -1,3 +1,16 @@
+const formElem = $('car-form');
+const tableBody = $('tbody');
+
+const getElemForm = (event) => (elemName) => {
+  return event.target.elements[elemName];
+}
+
+const elementTypes = {
+  image: createImage,
+  text: createText,
+  color: createColor
+}
+
 function $ (elem) {
   return document.querySelector(`[data-js="${elem}"]`);
 }
@@ -6,59 +19,56 @@ function $$ (elem) {
   return document.createElement(`${elem}`);
 }
 
-const formElem = $('car-form');
-const tableBody = $('tbody');
-
-formElem.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const imageInput = $('image');
-  const brandInput = $('brand');
-  const modelInput = $('model');
-  const yearInput = $('year');
-  const plateInput = $('plate');
-  const colorInput = $('color');
-  
-  const tr = $$('tr');
-  
+function createImage(value) {
   const tdImage = $$('td');
   const imgElem = $$('img');
-  imgElem.setAttribute('src', imageInput.value);
+  imgElem.src = value;
   tdImage.appendChild(imgElem);
   
-  const tdBrand = $$('td');
-  const brandPara = $$('p');
-  brandPara.textContent = brandInput.value;
-  tdBrand.appendChild(brandPara);
+  return tdImage;
+}
+
+function createText(value) {
+  const tdPara = $$('td');
+  const paraElem = $$('p');
+  paraElem.textContent= value;
+  tdPara.appendChild(paraElem);
   
-  const tdModel = $$('td');
-  const modelPara = $$('p');
-  modelPara.textContent = modelInput.value;
-  tdModel.appendChild(modelPara);
-  
-  const tdYear = $$('td');
-  const yearPara = $$('p');
-  yearPara.textContent = yearInput.value;
-  tdYear.appendChild(yearPara);
-  
-  const tdPlate = $$('td');
-  const platePara = $$('p');
-  platePara.textContent = plateInput.value;
-  tdPlate.appendChild(platePara);
-  
+  return tdPara;
+}
+
+function createColor(value) {
   const tdColor = $$('td');
   const colorDiv = $$('div');
   colorDiv.classList.add('container__item');
-  colorDiv.style.backgroundColor = colorInput.value;
+  colorDiv.style.backgroundColor = value;
   tdColor.appendChild(colorDiv);
   
-  tr.appendChild(tdImage);
-  tr.appendChild(tdBrand);
-  tr.appendChild(tdModel);
-  tr.appendChild(tdYear);
-  tr.appendChild(tdPlate);
-  tr.appendChild(tdColor);
+  return tdColor;
+}
+
+formElem.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const getElem = getElemForm(e);
+  
+  const elements = [
+    {type: 'image', value: getElem('image').value},
+    {type: 'text', value: getElem('brand').value},
+    {type: 'text', value: getElem('model').value},
+    {type: 'text', value: getElem('year').value},
+    {type: 'text', value: getElem('plate').value},
+    {type: 'color', value: getElem('color').value}
+  ];
+  
+  const tr = $$('tr');
+  
+  elements.forEach((element) => {
+    const td = elementTypes[element.type](element.value);
+    tr.appendChild(td);
+  });
   
   tableBody.appendChild(tr);
+  
   e.target.reset();
-  imageInput.focus();
+  image.focus();
 });
