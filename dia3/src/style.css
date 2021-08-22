@@ -36,3 +36,50 @@ form {
   place-items: center;
   place-content: center;
 }
+
+.car-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #4F4F4F;
+  padding: .5em;
+  text-align: left;
+}
+
+img {
+  display: block;
+  width: 135px;
+}
+
+input,
+button {
+  height: 46px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #333;
+  border-radius: 5px;
+  background-color: transparent;
+  padding: 0 1.4em;
+}
+
+input {
+  height: 36px;
+}
+
+input[type="color"] {
+  padding: 0 .1em;
+}
