@@ -1,8 +1,87 @@
+html {
+  font-size: 100%;
+  font-family: system-ui;
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  color: #4F4F4F;
+}
+
+.app {
+  padding: 2em 1em;
+}
+
+form {
+  margin-bottom: 2em;
+}
+
+.container-color {
+  width: 100%;
+  padding: 2px;
+  border-radius: 9px;
+  max-width: 100px;
+  aspect-ratio: 1/1;
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+
+.car-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td, th {
+  border: 1px solid #4F4F4F;
+  padding: .5em;
+  text-align: left;
+}
+
+img {
+  display: block;
+  width: 135px;
+}
+
+input,
+button[type="submit"] {
+  height: 46px;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #333;
+  border-radius: 5px;
+  background-color: transparent;
+  padding: 0 1.4em;
+}
+
+input {
+  height: 36px;
+}
+
+input[type="color"] {
+  padding: 0 .1em;
+}
+
+.empty-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30vh;
 }
